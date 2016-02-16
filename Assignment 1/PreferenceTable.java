@@ -2,14 +2,45 @@ import java.io.*;
 import java.util.*;
 
 public class PreferenceTable {
-	Vector<Vector<String>> table = null;
+	private Vector<Vector<String>> table = null;
+	private	HashMap<String, StudentEntry> studentLookup =	new	HashMap<String, StudentEntry>();	
 	
 	public PreferenceTable(String filename){
 		 table = loadContentFromFile(filename);	
 	}
 	 
-	public PreferenceTable() {
+	public PreferenceTable() {	
+	}
+	
+	//returns a List of all student entries
+	public Vector <StudentEntry> getAllStudentEntries(){
+		return  new  Vector<StudentEntry>(studentLookup.values());
+	}
+	
+	public StudentEntry getEntryFor(String sname){
+		if (studentLookup.containsKey(sname)){
+			return  studentLookup .get(sname);
+		}
 		
+		return null;
+	}
+	
+	private StudentEntry create_student_entry(Vector<String> student_data){
+		Iterator<String> data_itr = student_data.iterator();
+		
+		StudentEntry student = new StudentEntry(data_itr.next());
+		if (data_itr.next().equals("Yes")){
+			student.preassignProject(data_itr.next());
+		}
+		
+		else {
+			data_itr.next();
+			while(data_itr.hasNext()){
+				student.addProject( data_itr.next());
+			}
+		}
+		student.setNumberOfStatedPreferences();
+		return student;
 	}
 	
 	/*Adds a series of string tokens to a vector, which then in turn is added as an element of the targetTable
@@ -27,6 +58,7 @@ public class PreferenceTable {
 	
 	/*Reads a file  and converts its text to a preference table.  
 	 * Each line is converted to a vector of strings and then stored in a 2d vector to form the preference table
+	 * Each line vector is also made a StudentEntry and added to the studentLookup
 	 * @param filename: target file to be converted (must be tabs deliminated)
 	 * @return: 2d vector of string vectors forming preference table
 	 * */
@@ -34,11 +66,13 @@ public class PreferenceTable {
 		Vector<Vector<String>> fileTable = new Vector<Vector<String>>();
 		BufferedReader bufferedFile = FileIO.bufferFile(filename);
 		String currentLine = FileIO.nextLine(bufferedFile);
-					
+		currentLine =  FileIO.nextLine(bufferedFile);
+		
 		while (currentLine != null) {
-			
 			StringTokenizer tokens = new StringTokenizer(currentLine,	"\t");
 			addTokensToTable(tokens, fileTable);
+			StudentEntry new_student = create_student_entry(fileTable.lastElement());
+			studentLookup .put(new_student.getStudentName(),	new_student);
 			currentLine =  FileIO.nextLine(bufferedFile);
 		}
 		return fileTable;
