@@ -15,5 +15,18 @@ public class Main {
 		//testing search for non exsistant key
 		System.out.print("\nExpected value true: " +( test.getEntryFor("xxx") == null));
 		
+		
+		int target = test.getAllStudentEntries().size();
+		
+		// checks all students have 10 preferences if not preassigned after fillPreferences is called 
+		int count = 0;
+		test.fillPreferencesOfAll(10);
+		for ( StudentEntry student: test.getAllStudentEntries()){
+			if (student.getOrderedPreferences().size() == 10 || student.hasPreassignedProject()){
+				count += 1;
+			}
+		}
+		System.out.print("\nIf true all preferences are full:  " + (count == target));
+		
 	}
 }

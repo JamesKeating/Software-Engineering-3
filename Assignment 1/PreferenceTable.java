@@ -4,12 +4,26 @@ import java.util.*;
 public class PreferenceTable {
 	private Vector<Vector<String>> table = null;
 	private	HashMap<String, StudentEntry> studentLookup =	new	HashMap<String, StudentEntry>();	
+	private Random rnd = new Random();
 	
 	public PreferenceTable(String filename){
 		 table = loadContentFromFile(filename);	
 	}
 	 
 	public PreferenceTable() {	
+	}
+	
+	/*Fills each student in the preference tables preferences with a random pref until they have maxPrefs
+	 *@param maxprefs: number of preferences each student should have after method runs
+	 */
+	public void fillPreferencesOfAll(int maxPrefs){
+		for(StudentEntry student: getAllStudentEntries()){
+			if (!student.hasPreassignedProject()){
+				while(student.getOrderedPreferences().size() < maxPrefs){
+					student.addProject(getRandomPreference());
+				}
+			}
+		}
 	}
 	
 	//returns a List of all student entries
@@ -23,6 +37,21 @@ public class PreferenceTable {
 		}
 		
 		return null;
+	}
+	
+	//@return: a random student
+	public StudentEntry getRandomStudent() {
+		Vector<StudentEntry> allStudents = getAllStudentEntries();
+		int randomStudentIndex = rnd.nextInt(allStudents.size() - 1);
+		return allStudents.get(randomStudentIndex); 
+	}
+	
+	/*chooses a random student, then one of those students preferences at random
+	 * @return: a random preference
+	 */
+	public String getRandomPreference() {
+		StudentEntry rndStudent = getRandomStudent();
+		return rndStudent.getRandomPreference(); 
 	}
 	
 	private StudentEntry create_student_entry(Vector<String> student_data){
@@ -80,9 +109,8 @@ public class PreferenceTable {
 	
 	//prints table for testing purposes 
 	public void displayTable(){
-		for (int i = 0; i < table.size(); i++){
-			System.out.println(table.get(i));
+		for (Vector<String> line: table){
+			System.out.println(line);
 		}		
 	}
-	
 }

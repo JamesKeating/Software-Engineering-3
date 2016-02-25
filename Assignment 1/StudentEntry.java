@@ -1,12 +1,11 @@
 import java.util.*;
 
-
 public class StudentEntry {
-	Vector <String> preferences = new Vector<String>();
-	String name;
-	int initial_num_of_pref = 0;
-	boolean isPreassigned =false;
-	
+	private Vector <String> preferences = new Vector<String>();
+	private String name;
+	private int initial_num_of_pref = 0;
+	private boolean isPreassigned =false;
+	private Random rnd = new Random();
 	
 	StudentEntry(String input_name){
 		name = input_name;
@@ -14,6 +13,17 @@ public class StudentEntry {
 	
 	public String getStudentName(){
 		return name;
+	}
+	
+	//@return random preference cantained in preferences
+	public String getRandomPreference() {
+		Vector<String> pref = getOrderedPreferences();
+		int rndIndex = rnd.nextInt(pref.size());
+		return pref.get(rndIndex);
+	}
+	
+	public boolean hasPreference(String preference){
+		return  getOrderedPreferences().contains(preference);
 	}
 	
 	public Vector<String> getOrderedPreferences(){
@@ -39,8 +49,8 @@ public class StudentEntry {
 	}
 	
 	public void addProject(String	pname){
-		if (!isPreassigned){
-			preferences.add(pname);
+		if (!isPreassigned && !hasPreference(pname)){
+			preferences.add(pname.intern());
 		}
 	}
 	
@@ -48,5 +58,4 @@ public class StudentEntry {
 	public void displayStudent(){
 		System.out.print("\nStudent name: " + name+ "\nPreferences: " +  preferences + "\n");
 	}
-
 }
