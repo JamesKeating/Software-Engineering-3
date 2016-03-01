@@ -15,8 +15,7 @@ public class StudentEntry {
 		return name;
 	}
 	
-	//@return random preference cantained in preferences
-	public String getRandomPreference() {
+	public String getRandomPreference() {			//@return random preference cantained in preferences
 		Vector<String> pref = getOrderedPreferences();
 		int rndIndex = rnd.nextInt(pref.size());
 		return pref.get(rndIndex);
@@ -53,9 +52,8 @@ public class StudentEntry {
 			preferences.add(pname.intern());
 		}
 	}
-	
-	//prints student for testing purposes 
-	public void displayStudent(){
-		System.out.print("\nStudent name: " + name+ "\nPreferences: " +  preferences + "\n");
+	 
+	public String toString(){
+		return ("\nStudent name: " + name+ "\nPreferences: " +  preferences + "\n");
 	}
 }

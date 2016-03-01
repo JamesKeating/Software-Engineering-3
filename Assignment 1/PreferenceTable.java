@@ -10,12 +10,10 @@ public class PreferenceTable {
 		 table = loadContentFromFile(filename);	
 	}
 	 
-	public PreferenceTable() {	
-	}
+	public PreferenceTable() {}
 	
 	/*Fills each student in the preference tables preferences with a random pref until they have maxPrefs
-	 *@param maxprefs: number of preferences each student should have after method runs
-	 */
+	 *@param maxprefs: number of preferences each student should have after method runs */
 	public void fillPreferencesOfAll(int maxPrefs){
 		for(StudentEntry student: getAllStudentEntries()){
 			if (!student.hasPreassignedProject()){
@@ -50,7 +48,12 @@ public class PreferenceTable {
 	 * @return: a random preference
 	 */
 	public String getRandomPreference() {
-		StudentEntry rndStudent = getRandomStudent();
+		StudentEntry rndStudent;
+		//makes sure preference isnt a preassigned one
+		do{
+			rndStudent = getRandomStudent();
+		}while( rndStudent.hasPreassignedProject());
+			
 		return rndStudent.getRandomPreference(); 
 	}
 	
@@ -89,8 +92,7 @@ public class PreferenceTable {
 	 * Each line is converted to a vector of strings and then stored in a 2d vector to form the preference table
 	 * Each line vector is also made a StudentEntry and added to the studentLookup
 	 * @param filename: target file to be converted (must be tabs deliminated)
-	 * @return: 2d vector of string vectors forming preference table
-	 * */
+	 * @return: 2d vector of string vectors forming preference table  */
 	private Vector<Vector<String>> loadContentFromFile(String filename){
 		Vector<Vector<String>> fileTable = new Vector<Vector<String>>();
 		BufferedReader bufferedFile = FileIO.bufferFile(filename);
